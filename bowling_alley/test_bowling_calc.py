@@ -1,4 +1,4 @@
-from bowling_calculator import BowlingCalculator, Frame
+from bowling_calculator import BowlingCalculator
 import pytest
 
 class TestBowlingCalculator:
