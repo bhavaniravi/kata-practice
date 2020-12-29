@@ -34,18 +34,3 @@ class BowlingCalculator:
 
             score = score + frame_sum
         return score
-
-
-    def calculate():
-        pass
-
-
-class Frame:
-    def __init__(self, deliveries, frame_length=2):
-        if not (
-            (isinstance(deliveries, list)
-            or isinstance(deliveries, tuple))
-            and len(deliveries) <= frame_length
-        ):
-            raise TypeError("Invalid type")
-        self.deliveries = deliveries

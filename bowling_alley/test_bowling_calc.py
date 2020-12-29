@@ -39,22 +39,3 @@ class TestBowlingCalculator:
         
         score = calc.score()
         assert score == 12 # (10 + 1) + 1
-
-
-
-    @pytest.mark.parametrize("frames", (
-        [1, 2],
-        (1, 2)
-    ))
-    def test_frame(self, frames):
-        frame = Frame(frames)
-        assert frame.deliveries == frames
-
-    @pytest.mark.parametrize("frames", (
-        [1, 2, 3],
-        1,
-        "abc"
-    ))
-    def test_bad_frame(self, frames):
-        with pytest.raises(TypeError):
-            frame = Frame(frames)
