@@ -1,41 +1,48 @@
-from bowling_calculator import BowlingCalculator
+from bowling_calculator import BowlingCalculator, Frame
 import pytest
 
+class TestFrame:
+    def test_frame(self):
+        frame = Frame()
+        frame.add(2)
+        assert frame.is_empty() == True
+
+        frame.add(None)
+        assert frame.is_empty() == False
+
+
+
+
 class TestBowlingCalculator:
-    def test_roll(self):
-        calc = BowlingCalculator(frame_length=2)
-        assert calc.frame_length == 2
-        assert calc.frames != None
+    @pytest.mark.parametrize("rolls, frame_length, score",
+        (
+            ((1, 2), 1, 3),
+            ([1]*20, 10, 20),
+            ((10, ), 1, 10),
+            ((5, 5), 1, 10),
+            ((5,), 1, 5),
 
-        frame = 1
-        for i, val in enumerate(range(10)):
-            # 0 - 1
-            # 1 - 1
-            # 2 - 2
-            # 3 - 2
-            # 4 - 3
-            # 5 - 3
-            if i!=0 and i % 2 == 0:
-                frame = frame + 1 
-            calc.roll(val)
-            assert len(calc.frames) == frame
-        
-    def test_roll_with_strike_spare(self):
-        calc = BowlingCalculator(frame_length=2)
-        calc.roll(10) # 12
-        calc.roll(1) # 1
-        calc.roll(1) # 1
-        calc.roll(5) 
-        calc.roll(5) # 10
-        assert len(calc.frames) == 3
+            ((5, 5, 3), 2, 16),
+            ((10, 1, 2), 2, 16),
+        )
+    )
+    def test_rolls(self, rolls, frame_length, score):
+        calc = BowlingCalculator()
+        for roll in rolls:
+            calc.roll(roll)
 
-        score = calc.score()
-        assert score == 24 # (10 + 1 + 1) + (1 + 1) + (5 + 5)
+        assert len(calc.frames) == frame_length
+        assert calc.score() == score
 
-        calc = BowlingCalculator(frame_length=3)
-        calc.roll(10)
-        calc.roll(1)
-        assert len(calc.frames) == 2
-        
-        score = calc.score()
-        assert score == 12 # (10 + 1) + 1
+    @pytest.mark.parametrize("rolls",
+        (
+            # roll negative
+            ((-1, -2),)
+        )
+    )
+    def test_calc_error(self, rolls):
+        calc = BowlingCalculator()
+
+        with pytest.raises(TypeError):
+            for roll in rolls:
+                calc.roll(roll)
