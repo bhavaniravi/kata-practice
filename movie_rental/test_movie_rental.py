@@ -1,9 +1,15 @@
-from movie_rental import Rental
+from movie_rental import Customer
 import pytest
 
 params = [
     (
-        (
+        ({
+  "name": "martin",
+  "rentals": [
+    {"movieID": "F001", "days": 3},
+    {"movieID": "F002", "days": 1},
+  ]
+},
             """Rental Record for martin
   Ran 3.5
   Trois Couleurs: Bleu 2
@@ -22,15 +28,9 @@ You earned 2 frequent renter points""",
 
 
 class TestRental:
-    def test_statement(self):
-        rental = Rental(statement="hello")
-        assert rental.statement() == "hello"
-        assert rental._statement == "hello"
-
-    @pytest.mark.parametrize("input, expected", params)
-    def test_html_statement(self, input, expected):
-        rental = Rental(statement=input)
-        assert rental.statement() == input
+    @pytest.mark.parametrize("data, statement, htmlstatement", params)
+    def test_html_statement(self, data, statement, htmlstatement):
+        rental = Customer(**data)
+        assert rental.statement() == statement
         result = rental.statement_html()
-        print (result, "\n\n", expected)
-        assert result == expected
+        assert result == htmlstatement
