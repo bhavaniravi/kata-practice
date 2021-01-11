@@ -1,37 +1,28 @@
 import re
-
-
 class Calculator:
-    split_regex = "\n|,"
-    default_regex = "//(.+)\n"
-
-    def check_negatives(self, numbers):
-        negatives = [num for num in numbers if num < 0]
-        if negatives:
-            raise AttributeError("Negatives not supported")
 
     def get_delimiter(self, numbers):
-        if numbers.startswith("//"):
-            delimiter_section = numbers.split("\n")[0].strip("//") 
-            if "[" in delimiter_section:
-                return "|".join(map(re.escape, re.findall(r'\[([^]]*)\]',delimiter_section)))
-            return delimiter_section
-        else:
-            return self.split_regex
-    
-    def filter_1000(self, numbers):
-        return [num for num in numbers if num < 1000]
+        delimiter_section = numbers.split("\n")[0].strip("//") 
+        if "[" in delimiter_section:
+            return "".join(map(re.escape, re.findall(r'\[([^]]*)\]',delimiter_section)))
+        return delimiter_section
 
-    def add(self, numbers):
-        if not numbers:
-            return 0
-            
-        delimiter = self.get_delimiter(numbers)
-        if "//" in numbers:
-            numbers = numbers.split("\n")[1]
 
-        numbers = list(map(int, re.split(delimiter, numbers)))
-        
-        self.check_negatives(numbers)
-        numbers = self.filter_1000(numbers)
-        return sum(numbers)
+    def add(self, string):
+        if not string:
+            return 0 
+        delimiter = ",|\n"
+
+        if string.startswith("//"):
+            delimiter = self.get_delimiter(string)
+            string = string.split("\n", maxsplit=1)[1]
+
+        numbers = map(int, re.split(delimiter, string))
+        new_numbers = []
+        for num in numbers:
+            if num < 0:
+                raise Exception("Negatives not supported")
+            if num < 1000:
+                new_numbers.append(num)
+
+        return sum(new_numbers)
